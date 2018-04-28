@@ -1,0 +1,89 @@
+<script type="text/ng-template" id="galleryModal.html">
+<div class="modal-header">
+<h3 class="modal-title">Galeria {{ modalTitle }}</h3>
+</div>
+<div class="modal-body">
+<form novalidate>
+<div class="form-group">
+<label for="gallery-nombre">Nombre</label>
+<input type="text" class="form-control" id="gallery-nombre" placeholder="Nombre" ng-model="gallery.nombre">
+</div>
+</form>
+
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" type="button" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<table st-table="displayedCollection" st-safe-src="galleriesCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="firstName">Id</th>
+            <th st-sort="lastName">Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection">
+            <td>{{ row.id }}</td>
+            <td>{{ row.nombre }}</td>
+            <td>
+                <button type="button" ng-click="updateGallery(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removeGallery(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<button type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Galeria
+</button>
+
+<br><br><br>
+
+<div style="text-align:center;">
+    <h3>Subir Imagen</h3>
+    <form name="form">
+
+        <div class="btn btn-md btn-info" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+        ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
+        ngf-resize="{width: 1024, height: 768}">Seleccionar Imagen</div>
+        <br><br>
+
+        <img ngf-thumbnail="file" ngf-size="{width: 200, height: 150, quality: 0.9}">
+
+        <br><br>
+        <div class="form-group">
+            <select class="form-control" style="width:50%; display:inline;" name="category-select" id="category-select" ng-model="selectedCategory" ng-options="option.nombre for option in galleriesCollection">
+                <option value="">- Seleccione Galeria -</option>
+            </select>
+        </div>
+
+        <button class="btn btn-lg btn-info" type="submit" ng-click="submit()" ng-show="showSubmitButton()">Subir Imagen</button>
+
+    </form>
+</div>
+
+<hr>
+<h4>{{ selectedCategory.nombre }}</h4>
+
+<br><br>
+
+<span ng-repeat="imageList in imagesCollection">
+    <span ng-repeat="image in imageList">
+        <span style="white-space:nowrap;">
+            <a class="fancybox" rel="gallery1" href="../../img/gallery/{{ image.nombre }}">
+                <img style="height:160px; width:240px;padding-top: 5px;" ng-src="../../img/gallery/{{ image.nombre }}" alt="">
+            </a>
+            <button type="button" ng-click="removeImageFromGallery(image)" class="btn btn-sm btn-danger">
+                <i class="glyphicon glyphicon-remove-circle"></i> Borrar
+            </button>
+        </span>
+    </span>
+</span>

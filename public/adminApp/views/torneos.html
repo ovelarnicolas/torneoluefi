@@ -1,0 +1,72 @@
+<script type="text/ng-template" id="TorneoModal.html">
+<div class="modal-header">
+<h3 class="modal-title">Torneo {{ modalTitle }}</h3>
+</div>
+<div class="modal-body">
+    <form novalidate>
+        <div class="form-group">
+        <label for="torneo-nombre">Nombre</label>
+        <input type="text" class="form-control" id="torneo-nombre" placeholder="Nombre" ng-model="torneo.nombre_torneo">
+        </div>
+        <div class="form-group">
+        <label for="torneo-zona">Zona</label>
+        <select class="form-control" name="zonaSelect" id="zonaSelect" ng-options="option.id as (option.nombre + '-' + option.division.nombre) for option in zonas" ng-model="selectedZona" >
+            <option value="">Seleccione...</option>
+        </select>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<span>
+    <label for="torneo-Division">Division</label>
+    <select ng-change="update()" name="division" id="division" class="form-control" style="width:20%; display:inline;" ng-model="selectedDivision">
+          <option ng-repeat="option in divisiones" value="{{ option.id }}">{{ option.nombre }}</option>
+          <option value="">Seleccione... </option>
+    </select>
+</span>
+
+<span ng-show="selectedDivision">
+    <label for="torneo-zona">Zona</label>
+    <select name="zonaSelect" id="zonaSelect" class="form-control" style="width:20%; display:inline;" ng-model="selectedZona">
+          <option ng-repeat="option in zonas | filter: { division_id: selectedDivision }" value="{{ option.id }}">{{ option.nombre }}</option>
+          <option value="">Seleccione... </option>
+    </select>
+</span>
+
+<button ng-show="selectedZona" type="button" ng-click="searchTorneos()" class="btn btn-sm btn-info">
+    Buscar
+</button>
+
+<button ng-show="showGrid" type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Torneo
+</button>
+
+<table ng-show="showGrid" st-table="displayedCollection " st-safe-src="torneosCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="lastName">Nombre</th>
+            <th st-sort="lastName">Zona</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection | filter: { zona: { id: selectedZona } } | orderBy : 'nombre': false">
+            <td>{{row.nombre_torneo}}</td>
+            <td>{{row.zona.nombre}}</td>
+            <td>
+                <button type="button" ng-click="updateTorneo(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removeTorneo(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,103 @@
+<script type="text/ng-template" id="JugadorModal.html">
+<div class="modal-header">
+<h3 class="modal-title">Jugador {{ modalTitle }}</h3>
+</div>
+<div class="modal-body">
+  <form novalidate>
+      <div class="form-group">
+      <label for="jugador-nombre">Nombre</label>
+      <input type="text" class="form-control" id="jugador-nombre" placeholder="Nombre" ng-model="jugador.nombre">
+      </div>
+      <div class="form-group">
+      <label for="jugador-apellido">Apellido</label>
+      <input type="text" class="form-control" id="jugador-apellido" placeholder="Apellido" ng-model="jugador.apellido">
+      </div>
+      <div class="form-group">
+      <label for="jugador-dni">DNI</label>
+      <input type="text" class="form-control" id="jugador-dni" placeholder="DNI" ng-model="jugador.dni">
+      </div>
+      <div class="form-group">
+      <label for="partido-goles_b">Fecha de Nacimiento</label>
+      <input type="date" class="form-control" id="partido-goles_b" placeholder="Resultado" ng-model="jugador.fecha_nacimiento">
+      </div>
+  </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<div class="form-group">
+
+    <span>
+        <label for="jugador-zona">Division</label>
+        <select name="division" id="division" class="form-control" style="width:15%; display:inline;" ng-model="selectedDivision">
+              <option ng-repeat="option in divisiones" value="{{ option.id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedDivision">
+        <label for="jugador-zona">Zona</label>
+        <select name="zonaSelect" id="zonaSelect" class="form-control" style="width:15%; display:inline;" ng-model="selectedZona">
+              <option ng-repeat="option in zonas | filter: { division_id: selectedDivision }" value="{{ option.id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedZona">
+        <label for="posicion-torneo">Categoría</label>
+        <select name="torneoSelect" id="torneoSelect" class="form-control" style="width:15%; display:inline;" ng-model="selectedTorneo">
+              <option ng-repeat="option in torneos | filter: { zona_id: selectedZona, nombre_torneo: '!General' }" value="{{ option.torneo_id }}">{{ option.nombre_torneo }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedTorneo">
+        <label for="posicion-torneo">Equipo</label>
+        <select ng-change="update()" name="equipoSelect" id="equipoSelect" class="form-control" style="width:15%; display:inline;" ng-model="selectedEquipo">
+              <option ng-repeat="option in equipos" value="{{ option.equipo_id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <button ng-show="selectedTorneo" type="button" ng-click="searchJugadores()" class="btn btn-sm btn-info">
+        Mostrar Planilla
+    </button>
+
+</div>
+
+<button ng-show="showGrid" type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Jugador
+</button>
+
+<table ng-show="showGrid" st-table="displayedCollection" st-safe-src="jugadoresCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="lastName">N°</th>
+            <th st-sort="lastName">Nombre</th>
+            <th st-sort="birthDate">Apellido</th>
+            <th st-sort="lastName">DNI</th>
+            <th st-sort="birthDate">Fecha de Nacimiento</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection">
+            <td>{{$index + 1}}</td>
+            <td>{{row.nombre}}</td>
+            <td>{{row.apellido}}</td>
+            <td>{{row.dni}}</td>
+            <td>{{row.fecha_nacimiento}}</td>
+            <td>
+                <button type="button" ng-click="updateJugador(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removeJugador(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

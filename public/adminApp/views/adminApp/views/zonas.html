@@ -1,0 +1,53 @@
+<script type="text/ng-template" id="ZonaModal.html">
+<div class="modal-header">
+<h3 class="modal-title">Zona {{ modalTitle }}</h3>
+</div>
+<div class="modal-body">
+    <form novalidate>
+        <div class="form-group">
+        <label for="zona-nombre">Nombre</label>
+        <input type="text" class="form-control" id="zona-nombre" placeholder="Nombre" ng-model="zona.nombre">
+        </div>
+        <label for="zona-division">Division</label>
+            <select class="form-control"  name="zona-division" id="zona-division" ng-model="selectedDivision" ng-options="division.id as division.nombre for division in divisionList">
+                <option value="">Seleccione... </option>
+            </select>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<button type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Zona
+</button>
+
+<table st-table="displayedCollection" st-safe-src="zonasCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="id">Id</th>
+            <th st-sort="nombre">Nombre</th>
+            <th st-sort="division">Division</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection">
+            <td>{{ row.id }}</td>
+            <td>{{ row.nombre }}</td>
+            <td>{{ row.division.nombre }}</td>
+            <td>
+                <button type="button" ng-click="updateZona(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removeZona(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

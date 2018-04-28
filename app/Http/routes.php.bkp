@@ -1,0 +1,100 @@
+<?php
+
+use App\Division;
+
+Route::get('/', 'NoticiaController@main');
+
+Route::get('/nosotros', function () {
+    $divisiones = Division::all();
+    return view('nosotros', ['divisiones' => $divisiones]);
+});
+
+Route::get('/galeria', 'GalleryController@main');
+
+Route::get('/campeones', function () {
+    $divisiones = Division::all();
+    return view('campeones', ['divisiones' => $divisiones]);
+});
+
+Route::get('/reglamento', function () {
+    $divisiones = Division::all();
+    return view('reglamento', ['divisiones' => $divisiones]);
+});
+
+Route::get('/informacion', function () {
+    $divisiones = Division::all();
+    return view('informacion', ['divisiones' => $divisiones]);
+});
+
+Route::get('/contacto', function () {
+    $divisiones = Division::all();
+    return view('contacto', ['divisiones' => $divisiones]);
+});
+
+
+Route::get('divisiones/{id}', 'DivisionController@main');
+
+Route::get('partidos/{id}', 'PartidoController@main');
+
+Route::get('/admin', function () {
+    return view('admin');
+});
+
+Route::group(['prefix' => 'api'], function()
+{
+    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index', 'main']]);
+    Route::post('authenticate', 'AuthenticateController@authenticate');
+
+    Route::get('equipos', 'EquipoController@index');
+    Route::post('equipos', 'EquipoController@Create');
+    Route::delete('equipos/{id}', 'EquipoController@Delete');
+    Route::put('equipos/{id}', 'EquipoController@Update');
+    Route::post('equipos/UploadEscudo', 'EquipoController@UploadEscudo');
+
+    Route::get('torneos', 'TorneoController@index');
+    Route::post('torneos', 'TorneoController@Create');
+    Route::delete('torneos/{id}', 'TorneoController@Delete');
+    Route::put('torneos/{id}', 'TorneoController@Update');
+
+    Route::get('partidos', 'PartidoController@index');
+    Route::post('partidos', 'PartidoController@Create');
+    Route::delete('partidos/{id}', 'PartidoController@Delete');
+    Route::put('partidos/{id}', 'PartidoController@Update');
+    Route::get('partidos/ByCategory/{id}', 'PartidoController@ByCategory');
+
+    Route::get('zonas', 'ZonaController@index');
+    Route::post('zonas', 'ZonaController@Create');
+    Route::delete('zonas/{id}', 'ZonaController@Delete');
+    Route::put('zonas/{id}', 'ZonaController@Update');
+
+    Route::get('posiciones', 'PosicionController@index');
+    Route::post('posiciones', 'PosicionController@Create');
+    Route::delete('posiciones/{id}', 'PosicionController@Delete');
+    Route::put('posiciones/{id}', 'PosicionController@Update');
+    Route::get('posiciones/ByCategory/{id}', 'PosicionController@ByCategory');
+
+    Route::get('gallery', 'GalleryController@Index');
+    Route::get('gallery/{id}', 'GalleryController@ImagesByGalleryId');
+    Route::get('gallery/images', 'GalleryController@ImagesByGalleries');
+    Route::post('gallery', 'GalleryController@Create');
+    Route::delete('gallery/{id}', 'GalleryController@Delete');
+    Route::delete('gallery/image/{id}', 'GalleryController@DeleteImage');
+    Route::put('gallery/{id}', 'GalleryController@Update');
+    Route::post('gallery/upload', 'GalleryController@Upload');
+
+    Route::get('noticias', 'NoticiaController@index');
+    Route::post('noticias', 'NoticiaController@Create');
+    Route::delete('noticias/{id}', 'NoticiaController@Delete');
+    Route::put('noticias/{id}', 'NoticiaController@Update');
+
+    Route::resource('divisiones', 'DivisionController');
+
+    Route::get('jugadores', 'JugadorController@index');
+    Route::post('jugadores', 'JugadorController@Create');
+    Route::delete('jugadores/{id}', 'JugadorController@Delete');
+    Route::put('jugadores/{id}', 'JugadorController@Update');
+});
+
+Route::group(['middleware' => ['web']], function () {
+    //
+});

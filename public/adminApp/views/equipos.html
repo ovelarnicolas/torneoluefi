@@ -1,0 +1,62 @@
+<script type="text/ng-template" id="EquipoModal.html">
+<div class="modal-header">
+<h3 class="modal-title">{{ modalTitle }} Equipo</h3>
+</div>
+<div class="modal-body">
+    <form name="equipoForm" novalidate>
+        <div class="form-group">
+        <label for="equipo-nombre" required>Nombre</label>
+        <input type="text" class="form-control" id="equipo-nombre" placeholder="Nombre" ng-model="equipo.nombre">
+        </div>
+
+        <div class="form-group">
+        <label for="equipo-escudo">Escudo</label>
+        <img ng-show="equipo.escudo" ng-src="../../img/escudos/{{equipo.escudo}}"  width="150" height="150">
+        <div class="btn btn-md btn-info" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+                    ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
+                    ngf-resize="{width: 1024, height: 768}">Seleccionar Imagen</div>
+                            <img ngf-thumbnail="file" ngf-size="{width: 200, height: 150, quality: 0.9}">
+        </div>
+
+
+
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-disabled="equipoForm.$invalid" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<button type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Equipo
+</button>
+
+<table st-table="displayedCollection" st-safe-src="equiposCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="firstName">N°</th>
+            <th st-sort="lastName">Nombre</th>
+            <th st-sort="balance">Escudo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection">
+            <td>{{row.equipo_id}}</td>
+            <td>{{row.nombre}}</td>
+            <td>
+                <img ng-show="row.escudo" ng-src="../../img/escudos/{{row.escudo}}" width="50" height="50">
+            </td>
+            <td>
+                <button type="button" ng-click="updateEquipo(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removeEquipo(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

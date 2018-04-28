@@ -1,0 +1,111 @@
+<script type="text/ng-template" id="PartidoModal.html">
+<div class="modal-header">
+<h3 class="modal-title">Partido {{ modalTitle }}</h3>
+</div>
+<div class="modal-body">
+  <form novalidate>
+      <div class="form-group">
+      <label for="partido-equipo_a">Equipo</label>
+      <select class="form-control" name="equipo-select" id="equipo-select" ng-options="option.equipo_id as option.nombre for option in equipos" ng-model="selectedEquipoA" >
+          <option value="">Seleccione...</option>
+      </select>
+      </div>
+      <div class="form-group">
+      <label for="partido-goles_a">Puntos</label>
+      <input type="text" class="form-control" id="partido-goles_a" placeholder="Resultado" ng-model="partido.goles_a">
+      </div>
+      <div class="form-group">
+      <label for="partido-equipo_b">Equipo</label>
+      <select class="form-control" name="equipo-select" id="equipo-select" ng-options="option.equipo_id as option.nombre for option in equipos" ng-model="selectedEquipoB" >
+          <option value="">Seleccione...</option>
+      </select>
+      </div>
+      <div class="form-group">
+      <label for="partido-goles_b">Puntos</label>
+      <input type="text" class="form-control" id="partido-goles_b" placeholder="Resultado" ng-model="partido.goles_b">
+      </div>
+      <div class="form-group">
+      <label for="partido-fecha">Fecha N°</label>
+      <input type="text" class="form-control" id="partido-fecha" placeholder="Número de fecha" ng-model="partido.fecha">
+      </div>
+      <div class="form-group">
+      <label for="partido-dia">Día</label>
+      <input type="date" class="form-control" id="partido-dia" placeholder="Dia" ng-model="partido.dia">
+      </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<div class="form-group">
+
+    <span>
+        <label for="equipo-zona">Division</label>
+        <select name="division" id="division" class="form-control" style="width:20%; display:inline;" ng-model="selectedDivision">
+              <option ng-repeat="option in divisiones" value="{{ option.id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedDivision">
+        <label for="equipo-zona">Zona</label>
+        <select name="zonaSelect" id="zonaSelect" class="form-control" style="width:20%; display:inline;" ng-model="selectedZona">
+              <option ng-repeat="option in zonas | filter: { division_id: selectedDivision }" value="{{ option.id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedZona">
+        <label for="posicion-torneo">Categoría</label>
+        <select name="torneoSelect" id="torneoSelect" class="form-control" style="width:20%; display:inline;" ng-model="selectedTorneo">
+              <option ng-repeat="option in torneos | filter: { zona_id: selectedZona }" value="{{ option.torneo_id }}">{{ option.nombre_torneo }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <button ng-show="selectedTorneo" type="button" ng-click="searchPartidos()" class="btn btn-sm btn-info">
+        Buscar
+    </button>
+</div>
+
+<button ng-show="showGrid" type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Partido
+</button>
+
+<table ng-show="showGrid" st-table="displayedCollection" st-safe-src="partidosCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="lastName">Equipo</th>
+            <th st-sort="birthDate">Pts</th>
+            <th st-sort="lastName">Equipo</th>
+            <th st-sort="birthDate">Pts</th>
+            <th st-sort="balance">Fecha N°</th>
+            <th st-sort="balance">Día</th>
+            <th st-sort="balance">Torneo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection">
+            <td>{{row.equipo_a.nombre}}</td>
+            <td>{{row.goles_a}}</td>
+            <td>{{row.equipo_b.nombre}}</td>
+            <td>{{row.goles_b}}</td>
+            <td>{{row.fecha}}</td>
+            <td>{{row.dia}}</td>
+            <td>{{row.torneo.nombre_torneo}}</td>
+            <td>
+                <button type="button" ng-click="updatePartido(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removePartido(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

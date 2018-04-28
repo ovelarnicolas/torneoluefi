@@ -1,0 +1,94 @@
+<script type="text/ng-template" id="PosicionModal.html">
+<div class="modal-header">
+<h3 class="modal-title">Posiciones {{ modalTitle }}</h3>
+</div>
+<div class="modal-body">
+    <form novalidate>
+        <div class="form-group">
+        <label for="posicion-equipo">Equipo</label>
+
+        <select class="form-control" name="equipo-select" id="equipo-select" ng-options="option.equipo_id as option.nombre for option in equipos" ng-model="selectedEquipo" >
+            <option value="">Seleccione...</option>
+        </select>
+
+        </div>
+        <div class="form-group">
+        <label for="posicion-pj">Partidos Jugados</label>
+        <input type="text" class="form-control" id="posicion-pj" placeholder="Partidos jugados" ng-model="posicion.partidos_jugados">
+        </div>
+        <div class="form-group">
+        <label for="posicion-puntos">Puntos</label>
+        <input type="text" class="form-control" id="posicion-puntos" placeholder="Puntos" ng-model="posicion.puntos">
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Aceptar</button>
+<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+</div>
+</script>
+
+<div class="form-group">
+
+    <span>
+        <label for="posicion-division">Division</label>
+        <select name="division" id="division" class="form-control" style="width:20%; display:inline;" ng-model="selectedDivision">
+              <option ng-repeat="option in divisiones" value="{{ option.id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedDivision">
+        <label for="posicion-zona">Zona</label>
+        <select name="zonaSelect" id="zonaSelect" class="form-control" style="width:20%; display:inline;" ng-model="selectedZona">
+              <option ng-repeat="option in zonas | filter: { division_id: selectedDivision }" value="{{ option.id }}">{{ option.nombre }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <span ng-show="selectedZona">
+        <label for="posicion-torneo">Categoría</label>
+        <select name="torneoSelect" id="torneoSelect" class="form-control" style="width:20%; display:inline;" ng-model="selectedTorneo">
+              <option ng-repeat="option in torneos | filter: { zona_id: selectedZona }" value="{{ option.torneo_id }}">{{ option.nombre_torneo }}</option>
+              <option value="">Seleccione... </option>
+        </select>
+    </span>
+
+    <button ng-show="selectedTorneo" type="button" ng-click="searchTablaPosiciones()" class="btn btn-sm btn-info">
+        Buscar
+    </button>
+
+</div>
+
+<button ng-show="showGrid" type="button" ng-click="openForm()" class="btn btn-sm btn-success pull-right">
+    <i class="glyphicon glyphicon-plus"></i> Agregar Equipo
+</button>
+
+<table ng-show="showGrid" st-table="displayedCollection" st-safe-src="PosicionesCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th>N°</th>
+            <th st-sort="lastName">Equipo</th>
+            <th st-sort="lastName">PJ</th>
+            <th st-sort="lastName">PTS</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayedCollection | filter: { torneo_id: selectedTorneo,  torneo: { zona_id: selectedZona } } | orderBy : 'puntos*1':true">
+            <td>{{$index + 1}}</td>
+            <td>{{row.equipo.nombre}}</td>
+            <td>{{row.partidos_jugados}}</td>
+            <td>{{row.puntos}}</td>
+            <td>
+                <button type="button" ng-click="updatePosicion(row)" class="btn btn-sm btn-info">
+                    Editar
+                </button>
+                <button type="button" ng-click="removePosicion(row)" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-remove-circle">
+                    </i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
