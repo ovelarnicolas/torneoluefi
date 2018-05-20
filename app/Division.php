@@ -16,5 +16,4 @@ class Division extends Model
     {
         return $this->hasMany('App\Zona', 'division_id');
     }
-
 }
